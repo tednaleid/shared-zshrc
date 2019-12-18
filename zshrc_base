@@ -1,0 +1,249 @@
+## GENERAL EXPORTS ############################################################################################################
+
+export CLICOLOR="xterm-color"
+
+export USER_LIB=/Users/$USER/Documents/workspace/lib
+
+export JAVA_OPTS="$JAVA_OPTS -Xmx2048m -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:CICompilerCount=3 -Duser.timezone=UTC"
+
+export GRADLE_HOME=$HOME/.gvm/gradle/current
+export GRADLE_OPTS="-Xmx2048m"
+export GRADLE_REPOSITORY="$HOME/.gradle"
+
+# for X11 forwarding, (need to have X11.app running (in applications/utilities after install))
+export DISPLAY="localhost:0.0"
+
+
+export GOPATH=$WORKSPACE_DIR/go
+export PATH=$PATH:/usr/local/bin:${HOME}/bin:${GOPATH//://bin:}/bin:/usr/local/opt/go/libexec/bin:$HOME/.cargo/bin
+
+export WORDS=/usr/share/dict/words
+
+## GENERAL ############################################################################################################
+
+alias dh='dirs -v'  # directory history
+
+alias is_port_open='nc -z localhost'
+
+function wait_for_8080() {
+    echo "waiting for port 8080 to open up"
+    while ! is_port_open 8080; do sleep 0.1; done;
+}
+
+# grep history
+alias gh='fc -l 0 | grep'
+
+alias spwd='pwd | pbcopy'  # copy the current working directory to the clipboard
+alias pwp='pwd -P'
+
+# give it an url and it will see how long it takes to make 100 requests with 10 connections
+alias absimple='ab -n 100 -c 10 -g gnuplot.tsv'
+
+alias vz='v $ZSHDIR'
+
+alias agrep='alias | grep -i'
+
+# copy the last command to your clipboard
+alias clc='fc -ln -1 | pbcopy && echo $(pbpaste)'
+
+# builtins don't have their own man page
+alias manbi='man zshbuiltins'
+
+alias myip="curl icanhazip.com"
+
+alias curltime="curl -sL -w '   namelookup: %{time_namelookup}\n      connect: %{time_connect}\n   appconnect: %{time_appconnect}\n  pretransfer: %{time_pretransfer}\n     redirect: %{time_redirect}\nstarttransfer: %{time_starttransfer}\n        total: %{time_total}\n' "
+
+alias httpcode='curl --write-out %{http_code} --head --silent --output /dev/null'
+
+# global aliases
+alias -g 21="2>&1"
+alias -g G='| grep'
+alias -g GI='| grep -i'
+alias -g GV='| grep -v'
+alias -g GE='| egrep'
+alias -g PC="| pc"
+alias -g XGI="| xargs grep -ni"
+alias -g XG="| xargs grep -n"
+alias -g L='| less'
+alias -g PBC='| pbcopy'
+alias -g X1="| xargs -L1"
+
+alias -g ND='*(/om[1])' # newest directory
+alias -g NF='*(.om[1])' # newest file
+
+rot13 () { tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]" }
+
+alias duc='du -sh *(/)'
+alias duca='du -sh ./*'
+
+# forward requests from port 80 to 8080
+alias ipfw80to8080='sudo ipfw add 100 fwd 127.0.0.1,8080 tcp from any to any 80 in'
+
+# starts a server on port 8000 that makes the current directory browsable with a webbrowser
+alias webshare='python -m SimpleHTTPServer'
+
+function server() {
+    local port="${1:-8000}"
+    open "http://localhost:${port}/"
+    python -m SimpleHTTPServer "$port"
+}
+
+function open_when_resolves() {
+    echo "Waiting for $1 to resolve and not redirect to open"
+    while [ ! $(curl --write-out %{http_code} --max-time 10 --silent --output /dev/null $1) = 200 ]; do printf "."; sleep 0.5; done;
+    open $1
+}
+
+# SSL #
+alias sslserver=': SSL print out a list of the acceptable CAs for a server, as well as its public key, pass host:port; openssl s_client -prexit -showcerts -connect'
+# alias sslprintcert=': SSL print out the details of a cert using keytool; keytool -v -printcert -file'
+alias sslprintcert=': SSL print out the details of a cert using openssl; openssl x509 -noout -text -in'
+alias sslprintprivate=': SSL print out the details of a private key using openssl; openssl rsa -noout -text -in'
+
+## if these match, they are the public/private pair
+function sslx509md5() { openssl x509 -noout -modulus -in $1 | openssl md5 }
+function sslrsamd5() { openssl rsa -noout -modulus -in $1 | openssl md5 }
+alias sslpublicmd5=': SSL md5 of public key, check match against private; sslx509md5 $1'
+alias sslprivatemd5=': SSL md5 of private key, check match against public; sslrsamd5 $1'
+
+alias sslpk8topem=': SSL converte pk8 private key used by java to rsa pem format private key; openssl pkcs8 -nocrypt -in'
+alias sslstoredkeys=': SSL print out all of the keys in a keystore file; keytool -list -v -keystore'
+alias sslstoredkeys2=': SSL print out all of the raw public keys in a keystore file; keytool -list -rfc -keystore'
+alias sslcerthash=': SSL print out the hash for a certificate; openssl x509 -hash -noout -in'
+
+# brew install xmlstarlet
+# sudo easy_install pygments
+alias xmlpretty='xml fo | pygmentize -l xml'
+
+
+## VERSION CONTROL ############################################################################################################
+
+alias gs="git st"
+alias grh="git reset --hard"
+alias grs="git reset --soft"
+
+alias gd="git diff"
+alias gdt="git diff"
+alias gds="git diff --stat"
+
+alias gdth1="git difftool HEAD~1"
+alias gdh1="git diff HEAD~1"
+alias gdtod="git difftool origin/devleop"
+alias gdod="git diff origin/develop"
+alias gdtom="git difftool origin/master"
+alias gdom="git diff origin/master"
+
+alias -g H1="HEAD~1"
+alias -g OD="origin/develop"
+alias -g OM="origin/master"
+
+alias grom="git rebase -p origin/master"
+
+## Java
+
+function jdk() {
+  if [ $# -ne 0 ]; then
+   removeFromPath '/System/Library/Frameworks/JavaVM.framework/Home/bin'
+   if [ -n "${JAVA_HOME+x}" ]; then
+     removeFromPath $JAVA_HOME
+   fi
+   export JAVA_HOME=`/usr/libexec/java_home -v $1`
+   export PATH=$JAVA_HOME/bin:$PATH
+  else
+      java -version
+  fi
+}
+
+function removeFromPath() {
+  export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
+}
+
+# jdk 1.8
+jdk 11
+
+alias gw='nocorrect ./gradlew'
+
+## watchexec
+
+# live reload like env for a single file
+# watch a file (create it if it doesn't exist) if it changes run a command
+EDITOR=mvim
+function wexec() {
+  command -v watchexec >/dev/null 2>&1 || { echo "'watchexec' is required. e.g. brew install watchexec or cargo install watchexec" >&2; exit 1; }
+  if [[ -z $1 || "$1" == "--help" ]]; then
+    echo "usage: "
+    echo "    wexec <file/command to watch>"
+    echo "        the file will be assumed to be an executable command that will be run"
+    echo "        when it changes"
+    echo ""
+    echo "          ex: wexec foo.sh"
+    echo ""
+    echo "        the file will be created and marked as executable if it does not exist"
+    echo "or:"
+    echo ""
+    echo "    wexec <file/command to watch> <command args to run when file is changed>"
+    echo ""
+    echo "          ex: wexec yolo.sql psql -f yolo.sql"
+    echo ""
+    return -1
+  fi
+
+  FILE=$1
+
+  if [[ -z $2 ]]; then
+    # if no further commands are passed, then the file is the command
+    COMMAND="./$FILE"
+
+    if [ ! -f $FILE ]; then
+      # create the file as it doesn't exist, make it executable as it is the command
+      touch "$FILE"
+      chmod +x "$FILE"
+    fi
+  else
+    if [ ! -f $FILE ]; then
+      # create the file as it doesn't exist, don't make it executable, it is not the command
+      touch "$FILE"
+    fi
+
+    # all the args after the first are the command to run
+    COMMAND="${@:2}"
+  fi
+
+  # open the file in an editor for changes
+  $EDITOR "$FILE"
+
+  bash -c "watchexec -s SIGINT -r -d 100 -f '*/$FILE' '$COMMAND'"
+}
+
+## Fuzzy Finder Auto Completion
+
+FZF_SHELL="/usr/local/opt/fzf/shell"
+
+if [[ -d "$FZF_SHELL" ]]; then
+  export FZF_CTRL_R_OPTS="--min-height=20 --exact --preview 'echo {}' --preview-window down:3:wrap"
+  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,build}/*" 2> /dev/null'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_CTRL_T_OPTS=$'--min-height=20 --preview \'[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file ||
+                  (bat --style=numbers --color=always {} ||
+                    cat {}) 2> /dev/null | head -500
+  \''
+
+
+  source "${FZF_SHELL}/completion.zsh" 2> /dev/null
+  source "${FZF_SHELL}/key-bindings.zsh"
+
+  alias fzfp="fzf $FZF_CTRL_T_OPTS"
+  alias -g F='| fzfp'
+else
+  echo "missing fzf: brew install fzf ripgrep bat"
+fi
+
+## Antibody ZSH Plugins
+
+if command -v antibody >/dev/null 2>&1; then
+  source <(antibody init)
+  antibody bundle < "$ZSHDIR/zsh_plugins.txt"
+else
+  echo "antibody?"
+  echo "brew install getantibody/tap/antibody"
+fi

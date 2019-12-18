@@ -1,0 +1,68 @@
+# keep history file between sessions
+DIRSTACKSIZE=15
+HISTSIZE=50000
+SAVEHIST=10000
+HISTFILE=~/.history
+
+#--- zsh options ---
+#
+setopt autopushd # turn cd into pushd for all situations 
+setopt APPEND_HISTORY
+setopt AUTO_CD # cd if no matching command
+setopt EXTENDED_HISTORY # saves timestamps on history
+setopt EXTENDED_GLOB # globs #, ~ and ^
+setopt PUSHDMINUS       # make using cd -3 go to the 3rd directory history (dh) directory instead of having to use + (the default)
+setopt AUTO_PUSHD 
+setopt PUSHD_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE # don't put commands starting with a space in history
+setopt AUTO_PARAM_SLASH # adds slash at end of tabbed dirs
+setopt CHECK_JOBS # check bg jobs on exit
+setopt CORRECT # corrects spelling
+setopt CORRECT_ALL # corrects spelling
+
+
+setopt EXTENDED_HISTORY # timestamp the history + more
+setopt GLOB_DOTS # find dotfiles easier
+setopt HASH_CMDS # save cmd location to skip PATH lookup
+setopt HIST_NO_STORE # don't save 'history' cmd in history
+setopt HIST_IGNORE_DUPS # don't save duplicate entries in history
+setopt INC_APPEND_HISTORY # append history as command are entered
+setopt LIST_ROWS_FIRST # completion options left-to-right, top-to-bottom
+setopt LIST_TYPES # show file types in list
+setopt MARK_DIRS # adds slash to end of completed dirs
+setopt NUMERIC_GLOB_SORT # sort numerically first, before alpha
+setopt SHARE_HISTORY # share history between open shells
+
+unsetopt beep
+
+
+# add custom completions directory
+fpath+="$ZSHDIR/zfunc"
+
+# zmodload zsh/complist
+autoload -Uz compinit && compinit
+
+# by default: export WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
+# we take out the slash, period, angle brackets, dash here.
+export WORDCHARS='*?_[]~=&;!#$%^(){}'
+
+# Completion
+setopt auto_menu
+setopt always_to_end
+setopt complete_in_word
+unsetopt flow_control
+unsetopt menu_complete
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|=*'
+zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+
+
+# Other
+setopt prompt_subst # adds support for command substitution
+
+source "$ZSHDIR/purepower_prompt"
+
