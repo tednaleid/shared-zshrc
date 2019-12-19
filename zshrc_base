@@ -2,21 +2,6 @@
 
 export CLICOLOR="xterm-color"
 
-export USER_LIB=/Users/$USER/Documents/workspace/lib
-
-export JAVA_OPTS="$JAVA_OPTS -Xmx2048m -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:CICompilerCount=3 -Duser.timezone=UTC"
-
-export GRADLE_HOME=$HOME/.gvm/gradle/current
-export GRADLE_OPTS="-Xmx2048m"
-export GRADLE_REPOSITORY="$HOME/.gradle"
-
-# for X11 forwarding, (need to have X11.app running (in applications/utilities after install))
-export DISPLAY="localhost:0.0"
-
-
-export GOPATH=$WORKSPACE_DIR/go
-export PATH=$PATH:/usr/local/bin:${HOME}/bin:${GOPATH//://bin:}/bin:/usr/local/opt/go/libexec/bin:$HOME/.cargo/bin
-
 export WORDS=/usr/share/dict/words
 
 ## GENERAL ############################################################################################################
