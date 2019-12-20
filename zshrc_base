@@ -24,6 +24,9 @@ alias pwp='pwd -P'
 # give it an url and it will see how long it takes to make 100 requests with 10 connections
 alias absimple='ab -n 100 -c 10 -g gnuplot.tsv'
 
+
+export EDITOR=mvim
+alias v='$EDITOR'
 alias vz='v $ZSHDIR'
 
 alias agrep='alias | grep -i'
@@ -152,7 +155,6 @@ alias gw='nocorrect ./gradlew'
 
 # live reload like env for a single file
 # watch a file (create it if it doesn't exist) if it changes run a command
-EDITOR=mvim
 function wexec() {
   command -v watchexec >/dev/null 2>&1 || { echo "'watchexec' is required. e.g. brew install watchexec or cargo install watchexec" >&2; exit 1; }
   if [[ -z $1 || "$1" == "--help" ]]; then
