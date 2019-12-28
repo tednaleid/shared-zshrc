@@ -25,8 +25,8 @@ alias pwp='pwd -P'
 alias absimple='ab -n 100 -c 10 -g gnuplot.tsv'
 
 
-export EDITOR=mvim
-alias v='$EDITOR'
+export VIM_EDITOR=mvim
+alias v='$VIM_EDITOR'
 alias vz='v $ZSHDIR'
 
 alias agrep='alias | grep -i'
@@ -197,7 +197,7 @@ function wexec() {
   fi
 
   # open the file in an editor for changes
-  $EDITOR "$FILE"
+  $VIM_EDITOR "$FILE"
 
   bash -c "watchexec -s SIGINT -r -d 100 -f '*/$FILE' '$COMMAND'"
 }
