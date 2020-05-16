@@ -149,8 +149,35 @@ function removeFromPath() {
 # jdk 1.8
 jdk 11
 
-alias gw='nocorrect ./gradlew'
+function find_file_up() {
+  ls (../)#"$1"(:a)
+}
 
+function execute_up() {
+  local find_me="$1"
+  shift
+  local found=$(find_file_up "$find_me")
+  if [[ -f "$found" ]]; then
+    "$found" $*
+  else
+    echo "no $find_me in parent directories"
+  fi
+}
+
+alias gw="execute_up gradlew"
+
+# auto fix any ktlint errors, install with: brew install ktlint
+alias kgw="ktlint -F && gw"
+alias kgwc="kgw clean"
+alias kgwcc="kgw clean check"
+
+# docker
+alias dc="docker-compose"
+
+function drma() {
+  ## docker remove all containers
+  [[ -z $(docker ps -aq) ]] || docker rm -f $(docker ps -aq)
+}
 ## watchexec
 
 # live reload like env for a single file
