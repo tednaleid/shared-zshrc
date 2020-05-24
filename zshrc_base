@@ -168,7 +168,7 @@ alias gw="execute_up gradlew"
 
 # auto fix any ktlint errors, install with: brew install ktlint
 alias kgw="ktlint -F && gw"
-alias kgwc="kgw clean"
+alias kgwc="kgw check"
 alias kgwcc="kgw clean check"
 
 # docker
