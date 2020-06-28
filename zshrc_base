@@ -29,6 +29,16 @@ export VIM_EDITOR=mvim
 alias v='$VIM_EDITOR'
 alias vz='v $ZSHDIR'
 
+# needs gxargs - brew install findutils
+open_zshrc(){
+  cd $HOME/shared-zshrc && fd -t f -L -H -I -E ".git" | fzf -m | gxargs -ro -d "\n" mvim
+}
+
+zle     -N   open_zshrc
+# \e is escape, or option if checked in iterm preferences, so opt-z
+bindkey '\ez' open_zshrc
+
+
 alias agrep='alias | grep -i'
 
 # copy the last command to your clipboard
@@ -248,8 +258,20 @@ if [[ -d "$FZF_SHELL" ]]; then
 
   alias fzfp="fzf $FZF_CTRL_T_OPTS"
   alias -g F='| fzfp'
+
+  # needs findutils for gxargs and fd for better find
+  open_fzf() {
+    fd -t f -L -H -E ".git" | fzf -m | gxargs -ro -d "\n" open
+  }
+
+  cd_fzf() {
+    cd "$HOME" && cd "$(fd -t d | fzf --preview="tree -L 1 {}" --bind="space:toggle-preview" --preview-window=:hidden)" && echo "$PWD" && tree -L 1
+  }
+
+  zle     -N   open_fzf
+  bindkey '\eo' open_fzf
 else
-  echo "missing fzf: brew install fzf ripgrep bat"
+  echo "missing fzf: brew install fzf ripgrep bat fd findutils"
 fi
 
 ## Antibody ZSH Plugins
