@@ -272,7 +272,7 @@ if [[ -d "$FZF_SHELL" ]]; then
   cd_fzf() {
     local basedir=${1:-.} # default to starting from current directory (.) but allow override
     local directory
-    if directory=$(fd -t d -L -H -I -E ".git" . "$basedir" | fzf --preview="tree -L 1 {}"); then
+    if directory=$(fd -t d -L -H -I -E ".git" . "$basedir" | fzf --preview="tree -L 1 {}" --bind '?:toggle-preview'); then
       cd $directory && fzf-redraw-prompt
     fi
   }
