@@ -268,10 +268,13 @@ if [[ -d "$FZF_SHELL" ]]; then
   zle     -N   open_fzf
   bindkey '^o' open_fzf
 
-
-  # cd into a directory somewhere under the current path
+  # cd into a directory based on and fzf directory search
   cd_fzf() {
-    cd $(fd -t d | fzf --preview="tree -L 1 {}") && fzf-redraw-prompt
+    local basedir=${1:-.} # default to starting from current directory (.) but allow override
+    local directory
+    if directory=$(fd -t d -L -H -I -E ".git" . "$basedir" | fzf --preview="tree -L 1 {}"); then
+      cd $directory && fzf-redraw-prompt
+    fi
   }
 
   zle     -N   cd_fzf
@@ -279,7 +282,7 @@ if [[ -d "$FZF_SHELL" ]]; then
 
   # cd into a directory somewhere under the home directory
   cd_home_fzf() {
-    cd "$HOME" && cd_fzf
+    cd_fzf "$HOME"
   }
 
   zle     -N   cd_home_fzf
