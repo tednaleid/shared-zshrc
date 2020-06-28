@@ -285,6 +285,18 @@ if [[ -d "$FZF_SHELL" ]]; then
   zle     -N   cd_home_fzf
   bindkey '\ef' cd_home_fzf  # meta-f (opt)
 
+  export NOTES_DIR="$HOME/Dropbox/notes" # override in nonshared-zshrc/zshrc to get a different location
+
+  # needs gxargs and fd - brew install findutils fd
+  open_notes(){
+    pushd -q "$NOTES_DIR"
+    fd -t f -L -H -I -E ".git" | fzf -m | gxargs -ro -d "\n" mvim
+    popd -q
+  }
+
+  zle     -N   open_notes
+  bindkey '^n' open_notes
+
 else
   echo "missing fzf: brew install fzf ripgrep bat fd findutils"
 fi
