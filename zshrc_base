@@ -260,16 +260,31 @@ if [[ -d "$FZF_SHELL" ]]; then
   alias -g F='| fzfp'
 
   # needs findutils for gxargs and fd for better find
+  # open a file somewhere under the current directory
   open_fzf() {
     fd -t f -L -H -E ".git" | fzf -m | gxargs -ro -d "\n" open
   }
 
+  zle     -N   open_fzf
+  bindkey '^o' open_fzf
+
+
+  # cd into a directory somewhere under the current path
   cd_fzf() {
-    cd "$HOME" && cd "$(fd -t d | fzf --preview="tree -L 1 {}" --bind="space:toggle-preview" --preview-window=:hidden)" && echo "$PWD" && tree -L 1
+    cd $(fd -t d | fzf --preview="tree -L 1 {}") && fzf-redraw-prompt
   }
 
-  zle     -N   open_fzf
-  bindkey '\eo' open_fzf
+  zle     -N   cd_fzf
+  bindkey '^f' cd_fzf
+
+  # cd into a directory somewhere under the home directory
+  cd_home_fzf() {
+    cd "$HOME" && cd_fzf
+  }
+
+  zle     -N   cd_home_fzf
+  bindkey '\ef' cd_home_fzf  # meta-f (opt)
+
 else
   echo "missing fzf: brew install fzf ripgrep bat fd findutils"
 fi
