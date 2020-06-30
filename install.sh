@@ -43,6 +43,6 @@ EOF
   echo "Done creating ~/.zshrc file that expects zsh script in $SCRIPTDIR"
   echo ""
   echo "You likely want to run these now and then restart your shell:"
-  echo "brew install fzf ripgrep bat"
+  echo "brew install fzf ripgrep bat fd findutils"
   echo "brew install getantibody/tap/antibody"
 fi
