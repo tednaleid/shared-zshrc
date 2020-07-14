@@ -239,6 +239,24 @@ function wexec() {
   bash -c "watchexec -s SIGINT -r -d 100 -f '*/$FILE' '$COMMAND'"
 }
 
+## Python pyenv/direnv 
+
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+else
+  echo "direnv?"
+  echo "brew install direnv"
+fi
+
+if command -v pyenv >/dev/null 2>&1; then
+  PATH=$(pyenv root)/shims:$PATH
+  eval "$(pyenv init -)"
+else
+  echo "pyenv?"
+  echo "brew install pyenv"
+  echo "pyenv install 3.8.3"
+fi
+
 ## Fuzzy Finder Auto Completion
 
 FZF_SHELL="/usr/local/opt/fzf/shell"
