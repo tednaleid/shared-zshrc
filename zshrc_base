@@ -244,15 +244,14 @@ function wexec() {
 if command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook zsh)"
 else
-  echo "direnv?"
+  echo "missing direnv, install with:"
   echo "brew install direnv"
 fi
 
 if command -v pyenv >/dev/null 2>&1; then
-  PATH=$(pyenv root)/shims:$PATH
   eval "$(pyenv init -)"
 else
-  echo "pyenv?"
+  echo "missing pyenv, install with:"
   echo "brew install pyenv"
   echo "pyenv install 3.8.3"
 fi
