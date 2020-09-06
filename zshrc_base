@@ -342,6 +342,13 @@ else
   echo "missing fzf: brew install fzf ripgrep bat fd findutils"
 fi
 
+# navi
+
+if command -v navi >/dev/null 2>&1; then
+  source <(navi widget zsh)
+fi
+
+
 ## Antibody ZSH Plugins
 
 if command -v antibody >/dev/null 2>&1; then
