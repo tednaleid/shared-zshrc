@@ -239,6 +239,15 @@ function wexec() {
   bash -c "watchexec -s SIGINT -r -d 100 -f '*/$FILE' '$COMMAND'"
 }
 
+## jq
+
+jqpath_cmd='
+def path_str: [.[] | if (type == "string") then "." + . else "[" + (. | tostring) + "]" end] | add; 
+. as $orig | paths(scalars) as $paths | $paths | . as $path | $orig | [($path | path_str), getpath($path)] | @tsv
+'
+
+alias jqpath="jq -rc '$jqpath_cmd'"
+
 ## Python pyenv/direnv 
 
 if command -v direnv >/dev/null 2>&1; then
