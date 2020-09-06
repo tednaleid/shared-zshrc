@@ -246,7 +246,7 @@ def path_str: [.[] | if (type == "string") then "." + . else "[" + (. | tostring
 . as $orig | paths(scalars) as $paths | $paths | . as $path | $orig | [($path | path_str), getpath($path)] | @tsv
 '
 
-alias jqpath="jq -rc '$jqpath_cmd'"
+alias jqpath="jq -rc '$jqpath_cmd'" | fzf
 
 ## Python pyenv/direnv 
 
