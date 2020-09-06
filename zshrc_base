@@ -239,14 +239,6 @@ function wexec() {
   bash -c "watchexec -s SIGINT -r -d 100 -f '*/$FILE' '$COMMAND'"
 }
 
-## jq
-
-jqpath_cmd='
-def path_str: [.[] | if (type == "string") then "." + . else "[" + (. | tostring) + "]" end] | add; 
-. as $orig | paths(scalars) as $paths | $paths | . as $path | $orig | [($path | path_str), getpath($path)] | @tsv
-'
-
-alias jqpath="jq -rc '$jqpath_cmd'" | fzf
 
 ## Python pyenv/direnv 
 
@@ -338,8 +330,23 @@ if [[ -d "$FZF_SHELL" ]]; then
   zle     -N   open_notes
   bindkey '^n' open_notes
 
+  jqpath_cmd='
+  def path_str: [.[] | if (type == "string") then "." + . else "[" + (. | tostring) + "]" end] | add; 
+
+    . as $orig |
+      paths(scalars) as $paths |
+      $paths |
+      . as $path |
+      $orig |
+      [($path | path_str), "\u00a0", (getpath($path) | tostring)] |
+      add
+  '
+
+  # pipe json in to use fzf to search through it for jq paths, uses a non-breaking space as an fzf column delimiter
+  alias jqpath="jq -rc '$jqpath_cmd' | cat <(echo $'PATH\u00a0VALUE') - | column -t -s $'\u00a0' | fzf --header-lines=1"
+
 else
-  echo "missing fzf: brew install fzf ripgrep bat fd findutils"
+  echo "missing fzf: brew install fzf ripgrep bat fd findutils jq"
 fi
 
 # navi
