@@ -259,7 +259,11 @@ fi
 
 ## Fuzzy Finder Auto Completion
 
-FZF_SHELL="/usr/local/opt/fzf/shell"
+if [[ -d "/opt/homebrew/opt/fzf/shell" ]]; then
+  FZF_SHELL="/opt/homebrew/opt/fzf/shell"
+else
+  FZF_SHELL="/usr/local/opt/fzf/shell"
+fi
 
 if [[ -d "$FZF_SHELL" ]]; then
   export FZF_CTRL_R_OPTS="--min-height=20 --exact --preview 'echo {}' --preview-window down:3:wrap"
