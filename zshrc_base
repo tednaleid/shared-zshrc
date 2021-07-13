@@ -54,7 +54,6 @@ alias curltime="curl -sL -w '   namelookup: %{time_namelookup}\n      connect: %
 alias httpcode='curl --write-out %{http_code} --head --silent --output /dev/null'
 
 # global aliases
-alias -g 21="2>&1"
 alias -g G='| grep'
 alias -g GI='| grep -i'
 alias -g GV='| grep -v'
@@ -97,6 +96,7 @@ alias sslserver=': SSL print out a list of the acceptable CAs for a server, as w
 # alias sslprintcert=': SSL print out the details of a cert using keytool; keytool -v -printcert -file'
 alias sslprintcert=': SSL print out the details of a cert using openssl; openssl x509 -noout -text -in'
 alias sslprintprivate=': SSL print out the details of a private key using openssl; openssl rsa -noout -text -in'
+alias check_pem_cert='openssl x509 -subject -noout -nameopt RFC2253 -enddate -in'
 
 ## if these match, they are the public/private pair
 function sslx509md5() { openssl x509 -noout -modulus -in $1 | openssl md5 }
@@ -320,7 +320,7 @@ if [[ -d "$FZF_SHELL" ]]; then
   }
 
   zle     -N   cd_home_fzf
-  bindkey '\ef' cd_home_fzf  # meta-f (opt)
+#  bindkey '\ef' cd_home_fzf  # meta-f (opt)
 
   export NOTES_DIR="$HOME/Dropbox/notes" # override in nonshared-zshrc/zshrc to get a different location
 
