@@ -25,13 +25,13 @@ alias pwp='pwd -P'
 alias absimple='ab -n 100 -c 10 -g gnuplot.tsv'
 
 
-export VIM_EDITOR=mvim
+export VIM_EDITOR=code
 alias v='$VIM_EDITOR'
 alias vz='v $ZSHDIR'
 
 # needs gxargs - brew install findutils
 open_zshrc(){
-  cd $HOME/shared-zshrc && fd -t f -L -H -I -E ".git" | fzf -m | gxargs -ro -d "\n" mvim
+  cd $HOME/shared-zshrc && fd -t f -L -H -I -E ".git" | fzf -m | gxargs -ro -d "\n" "$VIM_EDITOR"
 }
 
 zle     -N   open_zshrc
@@ -351,7 +351,7 @@ if [[ -d "$FZF_SHELL" ]]; then
   # needs gxargs and fd - brew install findutils fd
   open_notes(){
     pushd -q "$NOTES_DIR"
-    fd -t f -L -H -I -E ".git" | fzf -m | gxargs -ro -d "\n" mvim
+    fd -t f -L -H -I -E ".git" | fzf -m | gxargs -ro -d "\n" "$VIM_EDITOR"
     popd -q
   }
 
