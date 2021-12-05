@@ -73,6 +73,15 @@ rot13 () { tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]" }
 alias duc='du -sh *(/)'
 alias duca='du -sh ./*'
 
+
+function epochToDate() {
+  if [ -z $1 ] ; then
+    echo "USAGE: epochToDate 1509821064514"
+    return 1
+  fi
+  date -j -r $(($1 / 1000))
+}
+
 # forward requests from port 80 to 8080
 alias ipfw80to8080='sudo ipfw add 100 fwd 127.0.0.1,8080 tcp from any to any 80 in'
 
@@ -239,6 +248,16 @@ function wexec() {
   bash -c "watchexec -s SIGINT -r -d 100 -f '*/$FILE' '$COMMAND'"
 }
 
+## Pony
+
+# regenerate ctags, including tags for the pony standard library, run from the git project root
+alias pctags='echo -e "$(cd -P "$(which ponyc)/../.."; pwd)\n$(pwd)" | ctags --tag-relative --extra=f -R -L -'
+
+# brew install llvm
+# from: https://www.ponylang.io/reference/pony-lldb-cheatsheet/
+export LDFLAGS="-L/usr/local/opt/llvm/lib"
+export CPPFLAGS="-I/usr/local/opt/llvm/include"
+
 
 ## Python pyenv/direnv 
 
@@ -255,6 +274,11 @@ else
   echo "missing pyenv, install with:"
   echo "brew install pyenv"
   echo "pyenv install 3.8.3"
+fi
+
+## nim
+if [[ -d "$HOME/.nimble/bin" ]]; then
+  export PATH="$HOME/.nimble/bin":$PATH
 fi
 
 ## Fuzzy Finder Auto Completion
